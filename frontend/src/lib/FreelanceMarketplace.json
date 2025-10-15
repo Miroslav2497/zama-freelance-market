@@ -1,0 +1,132 @@
+[
+  {
+    "inputs": [],
+    "name": "createJob",
+    "outputs": [{"type": "uint256"}],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "submitProposal",
+    "outputs": [{"type": "uint256"}],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{"type": "uint256", "name": "proposalId"}],
+    "name": "acceptProposal",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{"type": "uint256", "name": "jobId"}],
+    "name": "completeJob",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{"type": "uint256", "name": "jobId"}],
+    "name": "cancelJob",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{"type": "uint256"}],
+    "name": "jobs",
+    "outputs": [
+      {"type": "uint256", "name": "id"},
+      {"type": "address", "name": "employer"},
+      {"type": "string", "name": "title"},
+      {"type": "string", "name": "description"},
+      {"type": "uint8", "name": "status"},
+      {"type": "address", "name": "assignedFreelancer"},
+      {"type": "uint256", "name": "createdAt"},
+      {"type": "uint256", "name": "deadline"},
+      {"type": "bool", "name": "fundsLocked"},
+      {"type": "uint256", "name": "lockedAmount"}
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{"type": "uint256"}],
+    "name": "proposals",
+    "outputs": [
+      {"type": "uint256", "name": "id"},
+      {"type": "uint256", "name": "jobId"},
+      {"type": "address", "name": "freelancer"},
+      {"type": "string", "name": "coverLetter"},
+      {"type": "uint8", "name": "status"},
+      {"type": "uint256", "name": "submittedAt"}
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{"type": "uint256", "name": "jobId"}],
+    "name": "getJobProposals",
+    "outputs": [{"type": "uint256[]"}],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{"type": "address", "name": "employer"}],
+    "name": "getEmployerJobs",
+    "outputs": [{"type": "uint256[]"}],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{"type": "address", "name": "freelancer"}],
+    "name": "getFreelancerProposals",
+    "outputs": [{"type": "uint256[]"}],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {"indexed": true, "type": "uint256", "name": "jobId"},
+      {"indexed": true, "type": "address", "name": "employer"},
+      {"indexed": false, "type": "string", "name": "title"},
+      {"indexed": false, "type": "uint256", "name": "deadline"}
+    ],
+    "name": "JobCreated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {"indexed": true, "type": "uint256", "name": "proposalId"},
+      {"indexed": true, "type": "uint256", "name": "jobId"},
+      {"indexed": true, "type": "address", "name": "freelancer"}
+    ],
+    "name": "ProposalSubmitted",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {"indexed": true, "type": "uint256", "name": "proposalId"},
+      {"indexed": true, "type": "uint256", "name": "jobId"},
+      {"indexed": true, "type": "address", "name": "freelancer"}
+    ],
+    "name": "ProposalAccepted",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {"indexed": true, "type": "uint256", "name": "jobId"},
+      {"indexed": true, "type": "address", "name": "freelancer"},
+      {"indexed": false, "type": "uint256", "name": "paymentAmount"}
+    ],
+    "name": "JobCompleted",
+    "type": "event"
+  }
+]
+
