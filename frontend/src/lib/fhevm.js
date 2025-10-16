@@ -3,30 +3,33 @@ import { ethers } from 'ethers';
 let fhevmInstance = null;
 
 /**
- * 初始化 FHEVM 实例
+ * 初始化 FHEVM 实例（纯客户端）
  */
 export async function initFHEVM() {
+  // 只在浏览器端执行
+  if (typeof window === 'undefined') {
+    return null;
+  }
+  
   if (fhevmInstance) return fhevmInstance;
   
   try {
-    // 动态导入 fhevmjs（仅在浏览器端）
-    if (typeof window !== 'undefined') {
-      const { createInstance } = await import('fhevmjs');
+    // 动态导入 fhevmjs（避免构建时加载）
+    const { createInstance } = await import('fhevmjs');
+    
+    // 从Zama网关获取公钥
+    const publicKey = await fetch(
+      process.env.NEXT_PUBLIC_GATEWAY_URL + '/fhe-public-key'
+    ).then(res => res.json()).catch(() => null);
+    
+    if (publicKey) {
+      fhevmInstance = await createInstance({
+        kmsContractAddress: process.env.NEXT_PUBLIC_KMS_CONTRACT_ADDRESS || '0x0000000000000000000000000000000000000000',
+        aclContractAddress: process.env.NEXT_PUBLIC_ACL_CONTRACT_ADDRESS || '0x0000000000000000000000000000000000000000',
+        publicKey: publicKey,
+      });
       
-      // 从Zama网关获取公钥
-      const publicKey = await fetch(
-        process.env.NEXT_PUBLIC_GATEWAY_URL + '/fhe-public-key'
-      ).then(res => res.json()).catch(() => null);
-      
-      if (publicKey) {
-        fhevmInstance = await createInstance({
-          kmsContractAddress: process.env.NEXT_PUBLIC_KMS_CONTRACT_ADDRESS || '0x...',
-          aclContractAddress: process.env.NEXT_PUBLIC_ACL_CONTRACT_ADDRESS || '0x...',
-          publicKey: publicKey,
-        });
-        
-        console.log('✅ FHEVM 实例初始化成功');
-      }
+      console.log('✅ FHEVM 实例初始化成功');
     }
     
     return fhevmInstance;
@@ -40,6 +43,14 @@ export async function initFHEVM() {
  * 加密数字（用于预算和报价）
  */
 export async function encryptValue(value) {
+  // 服务端构建时返回占位数据
+  if (typeof window === 'undefined') {
+    return {
+      data: '0x' + '0'.repeat(64),
+      proof: '0x' + '0'.repeat(128),
+    };
+  }
+  
   const instance = await initFHEVM();
   
   if (!instance) {
@@ -71,6 +82,10 @@ export async function encryptValue(value) {
  * 解密数字
  */
 export async function decryptValue(handle, contractAddress, userAddress, signer) {
+  if (typeof window === 'undefined') {
+    return '0.0';
+  }
+  
   const instance = await initFHEVM();
   
   if (!instance) {
@@ -104,6 +119,10 @@ export async function decryptValue(handle, contractAddress, userAddress, signer)
  * 生成访问许可（允许查看加密数据）
  */
 export async function generatePermit(contractAddress, signer) {
+  if (typeof window === 'undefined') {
+    return null;
+  }
+  
   const instance = await initFHEVM();
   
   if (!instance) {
