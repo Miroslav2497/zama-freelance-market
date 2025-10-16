@@ -37,6 +37,8 @@ export default function CreateJob({ account, signer, connectWallet }) {
       // 1. 加密预算
       console.log('🔐 正在加密预算...');
       const budgetWei = ethers.parseEther(formData.budget);
+      // 动态导入 fhevm
+      const { encryptValue } = await import('@/lib/fhevm');
       const encryptedBudget = await encryptValue(budgetWei);
 
       // 2. 准备截止时间
