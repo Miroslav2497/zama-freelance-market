@@ -30,8 +30,10 @@ export default function App({ Component, pageProps }) {
       setSigner(signer);
       setAccount(address);
       
-      // 初始化 FHEVM
-      await initFHEVM();
+      // 初始化 FHEVM (不阻塞连接)
+      initFHEVM().catch(err => {
+        console.warn('⚠️ FHEVM初始化失败，但钱包已连接:', err);
+      });
       
       console.log('✅ 钱包连接成功:', address);
     } catch (error) {
@@ -102,4 +104,3 @@ export default function App({ Component, pageProps }) {
     </div>
   );
 }
-
