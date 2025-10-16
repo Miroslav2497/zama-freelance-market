@@ -1,7 +1,6 @@
 import '@/styles/globals.css';
 import { useEffect, useState } from 'react';
 import { ethers } from 'ethers';
-import { initFHEVM } from '@/lib/fhevm';
 
 export default function App({ Component, pageProps }) {
   const [account, setAccount] = useState(null);
@@ -30,8 +29,10 @@ export default function App({ Component, pageProps }) {
       setSigner(signer);
       setAccount(address);
       
-      // 初始化 FHEVM (不阻塞连接)
-      initFHEVM().catch(err => {
+      // 初始化 FHEVM (不阻塞连接，动态导入)
+      import('@/lib/fhevm').then(({ initFHEVM }) => {
+        return initFHEVM();
+      }).catch(err => {
         console.warn('⚠️ FHEVM初始化失败，但钱包已连接:', err);
       });
       
